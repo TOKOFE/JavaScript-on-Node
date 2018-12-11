@@ -1,25 +1,27 @@
 let fs = require('fs');
-let allWords;
 
 function findMaxEvenWord(inputData) {
-	allWords = inputData.split(' ');
+	let maxWord = '';
+	let nextSpace = 0;
+	let fromIndex = 0;
 
-	const evenWords = allWords.filter(word => {
-		return word.length % 2 === 0;
-	});
+	while (nextSpace >= 0) {
+		nextSpace = inputData.indexOf(' ', fromIndex);
 
-	if (evenWords.length === 0) {
-		return '00';
+		if (nextSpace === -1) {
+			word = inputData.substring(fromIndex);
+		} else {
+			word = inputData.substring(fromIndex, nextSpace);
+		}
+
+		if (word.length % 2 === 0) {
+			maxWord = maxWord.length >= word.length ? maxWord : word;
+		}
+
+		fromIndex = nextSpace + 1;
 	}
-	else {
-		const sortedWords = evenWords.sort((a, b) => {
-			return b.length - a.length;
-		});
 
-		// console.log(evenWords);
-
-		return sortedWords[0];
-	}
+	return maxWord ? maxWord : '00';
 }
 
 fs.readFile('./input-data.txt', 'utf-8', (err, data) => {
